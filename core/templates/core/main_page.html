@@ -1,0 +1,9 @@
+{% extends "core/base.html" %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+    <h2><a href="/posts/profiles/">Все профили</a></h2>
+    <div>Количество профилей: {{ profiles_count }}</div>
+{#    <h1>Some text</h1>#}
+{% endblock %}
