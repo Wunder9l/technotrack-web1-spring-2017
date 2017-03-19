@@ -1,0 +1,16 @@
+{% extends "core/base.html" %}
+
+{% block title %}Список публикаций{% endblock %}
+
+{% block content %}
+{#    {% include "core/list.html" with values_list=publication_list list_header_string='Последние публикации' count_string='на странице' list_empty_string='Публикаций нет' url_ref='publications:all_publications' %}#}
+    {% if publication_list %}
+        <h1>Список публикаций (на странице {{ publication_list|length }}):</h1>
+        {% for publication in publication_list %}
+            <h5><a href="{% url 'publications:one_publications' publication_id=publication.id %}">{{ publication.title }}</a></>
+            <div>Автор: {{ publication.author.full_name }}, {{ publication.creation_date|date:'Y-m-d H:i' }}</div>
+        {% endfor %}
+    {% else %}
+        <h1>Нет публикаций</h1>
+    {% endif %}
+{% endblock %}

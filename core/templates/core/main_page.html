@@ -3,7 +3,11 @@
 {% block title %}Главная страница{% endblock %}
 
 {% block content %}
-    <h2><a href="/posts/profiles/">Все профили</a></h2>
-    <div>Количество профилей: {{ profiles_count }}</div>
-{#    <h1>Some text</h1>#}
+    <div>Количество пользователей: {{ user_count }}</div>
+    {% if user_count %}<h2><a href="{% url 'users:all_users' %}">Все пользователи</a></h2>{% endif %}
+    <div>Количество публикаций: {{ publication_count }}</div>
+    {% if publication_count %}<h2><a href="{% url 'publications:all_publications' %}">Все публикации</a></h2>{% endif %}
+{% endblock %}
+
+{% block footer_content %}
 {% endblock %}

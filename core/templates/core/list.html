@@ -1,0 +1,20 @@
+{% if values_list %}
+    <h1>{{ list_header_string }} ({{ count_string }} {{ values_list|length }}):</h1>
+    <ol>
+        {% for value in values_list %}
+            {% if value.title %}
+{#                <li><a href="{% url '{{ url_ref }}' {{ url_par }} %}">{{ value.title }}</a></li>#}
+            {% elif value.full_name %}
+                <li><a href="url '{{ url_ref }}' {% if url_par %}{{ url_par }}{% endif %}">{{ value.full_name }}</a>
+                </li>
+                {#                <li>{{ value.full_name }}</li>#}
+            {% elif value.name %}
+                <li><a href="url '{{ url_ref }}' {% if url_par %}{{ url_par }}{% endif %}">{{ value.name }}</a></li>
+                <li>{{ value.name }}</li>
+            {% endif %}
+
+        {% endfor %}
+    </ol>
+{% else %}
+    <h1>{{ list_empty }}</h1>
+{% endif %}

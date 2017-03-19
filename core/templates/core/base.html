@@ -5,12 +5,14 @@
     <title>My first django site</title>
 </head>
 <body>
-<h1>{%  block title %}{% endblock %}</h1>
+<h1>{% block title %}{% endblock %}</h1>
 {% block content %}{% endblock %}
 
 
 </body>
 <footer>
-    <div><a href="/main/">Вернуться на главную</a> </div>
+    {% block footer_content %}
+        <div><a href="{% url "main_page" %}">Вернуться на главную</a></div>
+    {% endblock %}
 </footer>
 </html>

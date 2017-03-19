@@ -1,0 +1,24 @@
+{% extends "core/base.html" %}
+
+{% block title %}User details{% endblock %}
+{% block content %}
+    <h1>{{ object.first_name }}, {{ object.last_name }} ({{ object.username }})</h1>
+    <h4>{{ user.date_joined|date:'Y-m-d H:i' }}</h4>
+    <div>
+{#        {% include "core/list.html" with values_list=last_publications list_header_string='Последние публикации' count_string='всего' list_empty_string='Публикаций нет' url_ref='users:one_user' %}#}
+        {% if last_publications %}
+            <h1>Последние публикации:</h1>
+            <ol>
+                {% for publication in last_publications %}
+                    <li><a href="{% url 'publications:one_publications' publication_id=publication.id %}">{{ publication.title }}</a></li>
+                {% endfor %}
+            </ol>
+        {% else %}
+            <h1>Публикаций нет</h1>
+        {% endif %}
+
+        <div><a href="{% url 'publications:all_publications' %}">Все публикации</a></div>
+    </div>
+
+    <h2><a href="{% url 'users:all_users' %}">Все пользователи</a></h2>
+{% endblock %}

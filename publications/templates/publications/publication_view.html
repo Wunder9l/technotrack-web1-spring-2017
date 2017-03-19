@@ -1,0 +1,19 @@
+{% extends "core/base.html" %}
+
+{% block title %}Публикация{% endblock %}
+
+{% block content %}
+    <h1>{{ publication.title }}</h1>
+    <h4>Автор: {{ publication.author.full_name }}</h4>
+    <h4>Опубликовано: {{ publication.creation_date|date:'Y-m-d H:i' }}</h4>
+    <div>
+        {{ publication.content }}
+    </div>
+    {% if comments %}
+        {% for comment in comments %}
+            <div>{{ comment.author.full_name }}, {{ comment.creation_date|date:'Y-m-d H:i' }}</div>
+            <div>{{ comment.content }}</div>
+        {% endfor %}
+    {% endif %}
+
+{% endblock %}
