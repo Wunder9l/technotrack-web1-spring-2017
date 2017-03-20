@@ -61,15 +61,18 @@ class Command(BaseCommand):
             random = Random()
             users = User.objects.all()
             charts = string.lowercase + " "
-            for i in range(number):
-                content = "".join([random.choice(charts) for a in range(random.randint(40, 100))])
-                publication_title = "".join(
-                    [random.choice(string.lowercase) for a in range(random.randint(15, 30))]).title()
-                author = random.choice(users)
-                publication_type = random.choice(publication_types)
-                publication = Publication(author=author, title=publication_title, content=content,
-                                          publication_type=publication_type)
-                publication.save()
-            self.stdout.write("%i publications was added to database" % number)
+            if len(users) > 0:
+                for i in range(number):
+                    content = "".join([random.choice(charts) for a in range(random.randint(40, 100))])
+                    publication_title = "".join(
+                        [random.choice(string.lowercase) for a in range(random.randint(15, 30))]).title()
+                    author = random.choice(users)
+                    publication_type = random.choice(publication_types)
+                    publication = Publication(author=author, title=publication_title, content=content,
+                                              publication_type=publication_type)
+                    publication.save()
+                self.stdout.write("%i publications was added to database" % number)
+            else:
+                self.stdout.write("No user to add publication")
         else:
             self.stdout.write("Invalid number of publications to add was set. Nothing done")
