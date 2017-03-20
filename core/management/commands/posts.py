@@ -27,7 +27,7 @@ class Command(BaseCommand):
         group.add_argument('--show', "-s", action='store_true', help="Show publications of users in db")
 
     def handle(self, *args, **options):
-        print(options)
+        # print(options)
         if options['delete']:
             self.delete_publications()
         elif options['show']:

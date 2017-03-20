@@ -26,7 +26,7 @@ class Command(BaseCommand):
         group.add_argument('--show', "-s", action='store_true', help="Show all users in db")
 
     def handle(self, *args, **options):
-        print(options)
+        # print(options)
         if options['delete']:
             self.delete_users()
         elif options['show']:

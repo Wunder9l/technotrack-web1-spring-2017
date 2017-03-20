@@ -28,7 +28,7 @@ class Command(BaseCommand):
         group.add_argument('--show', "-s", action='store_true', help="Show comments of publications in db")
 
     def handle(self, *args, **options):
-        print(options)
+        # print(options)
         if options['delete']:
             self.delete_comments()
         elif options['show']:
