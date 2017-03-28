@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
@@ -26,7 +25,6 @@ SECRET_KEY = 'rpb3i$5p&m3-^+vv_6zp%)=dxqwn$@_4cou07gi71zek$ul#3y'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -40,10 +38,15 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'publications.apps.PostsConfig',
     'comments.apps.CommentsConfig',
+    'widget_tweaks',
     # 'comments'
 ]
 
 AUTH_USER_MODEL = 'core.User'
+
+LOGIN_URL = "core:login"
+LOGIN_REDIRECT_URL = 'core:main_page'
+LOGOUT_REDIRECT_URL = 'core:main_page'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -75,7 +78,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'application.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
@@ -86,9 +88,10 @@ DATABASES = {
         'USER': 'artem_mysql',
         'PASSWORD': 'web_server_passw',
         'HOST': 'localhost',
+        'DEFAULT_CHARSET': 'utf8',
+        'DEFAULT_CONTENT_TYPE': 'text/html',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
@@ -108,7 +111,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
@@ -121,7 +123,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/

@@ -1,0 +1,22 @@
+{% extends "core/base.html" %}
+
+{% block title %}
+    {% if comment.author == user %}
+        Редактировать комментарий
+    {% else %}
+        Вы не можете редактировать чужой комментарий
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if comment.author == user %}
+
+        <h4>К публикации: {{ publication.title }}</h4>
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Сохранить">
+        </form>
+    {% endif %}
+{% endblock %}

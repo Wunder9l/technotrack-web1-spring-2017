@@ -5,6 +5,14 @@
     <title>My first django site</title>
 </head>
 <body>
+<div>{% block login_info %}
+    {% if user.username %}
+        Вы вошли как {{ user.username }}, <a href="{% url 'core:logout' %}">выйти</a>
+    {% else %}
+        Вы не вошли, <a href="{% url 'core:login' %}">войти</a>
+    {% endif %}
+{% endblock %}</div>
+
 <h1>{% block title %}{% endblock %}</h1>
 {% block content %}{% endblock %}
 
@@ -12,7 +20,7 @@
 </body>
 <footer>
     {% block footer_content %}
-        <div><a href="{% url "main_page" %}">Вернуться на главную</a></div>
+        <div><a href="{% url "core:main_page" %}">Вернуться на главную</a></div>
     {% endblock %}
 </footer>
 </html>

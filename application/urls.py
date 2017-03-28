@@ -19,7 +19,7 @@ from core.views import MainPage
 # from core.models import
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', MainPage.as_view(), name="main_page"),
-    url(r'^user', include('core.urls', namespace="users")),
+    url(r'', include('core.urls', namespace="core")),
     url(r'^publications/', include('publications.urls', namespace="publications")),
+    url(r'^comment/', include('comments.urls', namespace="comment")),
 ]

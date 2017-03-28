@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, resolve_url
 from core.models import User
-from django.views.generic import ListView, DetailView, TemplateView
+from django.views.generic import ListView, DetailView, TemplateView, CreateView
 from publications.models import Publication
+from .forms import UserRegistrationForm
 
 
 class MainPage(TemplateView):
@@ -26,6 +27,7 @@ class UserView(DetailView):
     model = User
     template_name = "users/one_user.html"
     pk_url_kwarg = "user_id"
+    context_object_name = "user_profile"
 
     def get_context_data(self, **kwargs):
         context = super(UserView, self).get_context_data(**kwargs)
@@ -33,3 +35,14 @@ class UserView(DetailView):
         if last_publications.count() > 0:
             context["last_publications"] = last_publications
         return context
+
+
+class UserRegistrationView(CreateView):
+    form_class = UserRegistrationForm
+    template_name = 'users/new_user.html'
+
+    def get_success_url(self):
+        return resolve_url('core:main_page')
+
+    # def form_valid(self, form):
+    #     return super(UserRegistrationForm, self).form_valid(form)

@@ -4,12 +4,12 @@
 {% block title %}Список пользователей{% endblock %}
 
 {% block content %}
-{#    {% include "core/list.html" with values_list=user_list list_header_string='Список пользователей' count_string='на странице' list_empty_string='Пользователей нет' url_ref='users:one_user' %}#}
+{#    {% include "core/list.html" with values_list=user_list list_header_string='Список пользователей' count_string='на странице' list_empty_string='Пользователей нет' url_ref='core:one_user' %}#}
     {% if user_list %}
         <h1>Список пользователей (на странице {{ user_list|length }})</h1>
         <ol>
             {% for user in user_list %}
-                <li><a href="{% url 'users:one_user' user_id=user.id %}"> {{ user.full_name }}</a></li>
+                <li><a href="{% url 'core:one_user' user_id=user.id %}"> {{ user.full_name }}</a></li>
             {% endfor %}
         </ol>
     {% else %}

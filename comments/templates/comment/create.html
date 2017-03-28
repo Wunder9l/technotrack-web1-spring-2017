@@ -1,0 +1,14 @@
+{% extends "core/base.html" %}
+
+{% block title %}Добавить новый комментарий{% endblock %}
+
+{% block content %}
+    <h4>К публикации: {{ publication.title }}</h4>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Сохранить">
+    </form>
+
+{% endblock %}

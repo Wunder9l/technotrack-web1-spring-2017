@@ -9,11 +9,18 @@
     <div>
         {{ publication.content }}
     </div>
+    {% if user.username %}
+        <h5><a href="{% url 'comment:create' publication_id=publication.id %}">Добавить комментарий</a></h5>
+    {% endif %}
+
     {% if comments %}
         <h4>Комментарии:</h4>
         {% for comment in comments %}
             <div>{{ comment.author.full_name }}, {{ comment.creation_date|date:'Y-m-d H:i' }}</div>
             <div>{{ comment.content }}</div>
+            {% if comment.author == user %}
+                <div><a href="{% url 'comment:edit' comment_id=comment.id %}">Редактировать</a></div>
+            {% endif %}
         {% endfor %}
     {% else %}
         <h4>Нет комментариев</h4>
