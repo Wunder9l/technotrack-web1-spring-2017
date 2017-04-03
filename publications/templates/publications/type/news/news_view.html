@@ -1,0 +1,8 @@
+{% extends "publications/publication_view.html" %}
+
+{% block publication_type %}новость{% endblock %}
+
+
+{% block add_comment %}
+    <a href="{% url 'comment:create' publication_type='news' publication_id=publication.id %}">Добавить
+        комментарий</a>{% endblock %}

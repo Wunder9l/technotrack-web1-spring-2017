@@ -1,0 +1,18 @@
+{% if object_meta_info %}
+    {% if object_meta_info.content_type == achievement %}
+        <h5>
+            <a href="{% url 'publications:achievement_view' achievement_id=object_meta_info.content_object.id %}">{{ object_meta_info.title }}</a>
+        </h5>
+        {#            {% if comment.author == user %}#}
+        {#                <div><a href="{% url 'comment:edit' comment_id=comment.id %}">Редактировать</a></div>#}
+        {#            {% endif %}#}
+    {% elif  object_meta_info.content_type == news %}
+        <h5>
+            <a href="{% url 'publications:news_view' news_id=object_meta_info.content_object.id %}">{{ object_meta_info.title }}</a>
+        </h5>
+    {% endif %}
+    <div>Тип: {{ object_meta_info.content_type }}</div>
+    <div>
+        Автор: {{ object_meta_info.content_object.author.full_name }}, {{ object_meta_info.creation_date|date:'Y-m-d H:i' }}
+    </div>
+{% endif %}

@@ -5,8 +5,12 @@
 {% block content %}
     <div>Количество пользователей: {{ user_count }}</div>
     {% if user_count %}<h2><a href="{% url 'core:all_users' %}">Все пользователи</a></h2>{% endif %}
-    <div>Количество публикаций: {{ publication_count }}</div>
-    {% if publication_count %}<h2><a href="{% url 'publications:all' %}">Все публикации</a></h2>{% endif %}
+    <div>Всего публикаций: {{ publication_count }}</div>
+
+    {% if publication_count %}<div>   Из них достижений: {{ achievement_count }}</div>
+    <br>
+    <div><a href="{% url 'publications:all' %}?sort=creation_date&publication_type=news&publication_type=achievement&search=">Перейти к списку</a></div>
+    {% endif %}
 {% endblock %}
 
 {% block footer_content %}

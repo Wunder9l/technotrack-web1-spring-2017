@@ -3,26 +3,25 @@
 {% block title %}Список публикаций{% endblock %}
 
 {% block content %}
-    {#    {% include "core/list.html" with values_list=publication_list list_header_string='Последние публикации' count_string='на странице' list_empty_string='Публикаций нет' url_ref='publications:all' %}#}
-    {% if publication_list %}
-        <h1>Список публикаций (на странице {{ publication_list|length }}):</h1>
+    {#    {% include "core/list.html" with values_list=object_list list_header_string='Последние публикации' count_string='на странице' list_empty_string='Публикаций нет' url_ref='publications:all' %}#}
+    {% if object_list %}
+        <h1>Список публикаций (на странице {{ object_list|length }}):</h1>
 
         {% if user.username %}
-            <h5><a href="{% url 'publications:new' %}">Добавить публикацию</a></h5>
+            <h5><a href="{% url 'publications:achievement_new' %}">Добавить достижение</a></h5>
         {% endif %}
 
         <form method="get" action="{% url 'publications:all' %}">
+            {{ sortform.errors }}
+            {{ sortform.non_field_errors }}
             {{ sortform.sort }}
+            {{ sortform.publication_type }}
             {{ sortform.search.label_tag }}{{ sortform.search }}
             <input type="submit" value="Применить">
         </form>
 
-        {% for publication in publication_list %}
-            <h5><a href="{% url 'publications:view' publication_id=publication.id %}">{{ publication.title }}</a></h5>
-            <div>Автор: {{ publication.author.full_name }}, {{ publication.creation_date|date:'Y-m-d H:i' }}</div>
-{#            {% if comment.author == user %}#}
-{#                <div><a href="{% url 'comment:edit' comment_id=comment.id %}">Редактировать</a></div>#}
-{#            {% endif %}#}
+        {% for publication_meta_info in object_list %}
+            {% include "publications/tools/publication_view_href_gen.html" with object_meta_info=publication_meta_info achievement=achievement_content_type news=news_content_type %}
         {% endfor %}
     {% else %}
         <h1>Нет публикаций</h1>

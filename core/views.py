@@ -1,7 +1,7 @@
 from django.shortcuts import render, resolve_url
 from core.models import User
 from django.views.generic import ListView, DetailView, TemplateView, CreateView
-from publications.models import Publication
+from publications.models import PublicationMetaInfo, Achievement
 from .forms import UserRegistrationForm
 
 
@@ -12,8 +12,10 @@ class MainPage(TemplateView):
         context = super(MainPage, self).get_context_data(**kwargs)
         users_count = User.objects.all().count()
         context["user_count"] = users_count
-        publication_count = Publication.objects.all().count()
+        publication_count = PublicationMetaInfo.objects.count()
         context["publication_count"] = publication_count
+        achievement_count = Achievement.objects.count()
+        context["achievement_count"] = publication_count
         return context
 
 

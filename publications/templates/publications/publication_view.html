@@ -4,13 +4,18 @@
 
 {% block content %}
     <h1>{{ publication.title }}</h1>
+    <h4>Тип: {% block publication_type %}{% endblock %}</h4>
     <h4>Автор: {{ publication.author.full_name }}</h4>
     <h4>Опубликовано: {{ publication.creation_date|date:'Y-m-d H:i' }}</h4>
-    <div>
-        {{ publication.content }}
-    </div>
+
+    {% block publication_content %}
+        <div>
+            {{ publication.content }}
+        </div>
+    {% endblock %}
+
     {% if user.username %}
-        <h5><a href="{% url 'comment:create' publication_id=publication.id %}">Добавить комментарий</a></h5>
+        <h5>{% block add_comment %}{% endblock %}</h5>
     {% endif %}
 
     {% if comments %}
