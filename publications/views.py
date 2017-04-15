@@ -1,6 +1,8 @@
 # coding: utf-8
 from django.contrib.contenttypes.models import ContentType
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
+
+from publications.publication_type_resolver import PUBLICATION_TYPE_TO_MODEL, PUBLICATION_TYPE_TO_CONTENT_TYPE
 from .forms import *
 from .models import Publication, Achievement, News, PublicationMetaInfo
 from comments.models import Comment
@@ -86,36 +88,8 @@ class PublicationsList(ListView):
 
     def get_initial_queryset(self):
         types = self.sortform.cleaned_data["publication_type"]
-        print "TYPES: ", types
-        if len(types) == len(AVAILABLE_PUBLICATIONS_TYPES):
-            return PublicationMetaInfo.objects.all()  # все виды публикаций
-        else:
-            if u'news' in types:
-                news_type = ContentType.objects.get_for_model(News)
-                return PublicationMetaInfo.objects.filter(content_type=news_type)
-            elif u'achievement' in types:
-                achievement_type = ContentType.objects.get_for_model(Achievement)
-                return PublicationMetaInfo.objects.filter(content_type=achievement_type)
-            else:
-                return PublicationMetaInfo.objects.all()
-
-
-# class PublicationCreateView(CreateView):
-#     # model = Publication
-#     # form_class = PublicationForm
-#     # fields = ['title', 'content']
-#     # tags = forms.MultipleChoiceField(choices=Tag.objects.all())
-#     # publication_type = forms.ChoiceField(choices=AVAILABLE_PUBLICATIONS_TYPES)
-#     template_name = "publications/publication_create.html"
-#
-#     def form_valid(self, form):
-#         form.instance.author = self.request.user
-#         print "FIELDS:", form.fields
-#         # form.instance.publication_type = form.fields
-#         return super(PublicationCreateView, self).form_valid(form)
-#
-#     def get_success_url(self):
-#         return resolve_url('publications:all')
+        chosen_content_types = [PUBLICATION_TYPE_TO_CONTENT_TYPE[key] for key in types]
+        return PublicationMetaInfo.objects.filter(content_type__in=chosen_content_types)
 
 
 class AchievementCreateView(CreateView):

@@ -1,7 +1,8 @@
+from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import render, resolve_url
 from core.models import User
 from django.views.generic import ListView, DetailView, TemplateView, CreateView
-from publications.models import PublicationMetaInfo, Achievement
+from publications.models import PublicationMetaInfo, Achievement, News
 from .forms import UserRegistrationForm
 
 
@@ -33,9 +34,12 @@ class UserView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(UserView, self).get_context_data(**kwargs)
-        last_publications = Publication.objects.filter(author=self.get_object().id).order_by('-update_date')[:5]
+        last_publications = PublicationMetaInfo.objects.filter(author=self.get_object().id)
+        last_publications = last_publications.order_by('-update_date')[:5]
         if last_publications.count() > 0:
             context["last_publications"] = last_publications
+        context["achievement_content_type"] = ContentType.objects.get_for_model(Achievement)
+        context["news_content_type"] = ContentType.objects.get_for_model(News)
         return context
 
 

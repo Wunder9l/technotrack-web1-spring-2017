@@ -14,9 +14,6 @@ from comments.models import Comment
 
 class Tag(models.Model):
     title = models.CharField(max_length=50)
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey('content_type', 'object_id')
 
     def __str__(self):  # __unicode__ on Python 2
         return self.title
@@ -24,6 +21,12 @@ class Tag(models.Model):
     class Meta:
         ordering = ('title',)
 
+
+class Taggable(models.Model):
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE,related_name="tagged_objects")
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
 
 class Like(models.Model):
     author = models.ForeignKey(User)
@@ -39,19 +42,19 @@ class PublicationMetaInfo(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
-    creation_date = models.DateTimeField(default=timezone.now)
-    update_date = models.DateTimeField(default=timezone.now)
+    creation_date = models.DateTimeField(default=timezone.now, editable=False)
+    update_date = models.DateTimeField(default=timezone.now, editable=False)
     title = models.CharField(max_length=255)
-    publication_type = models.CharField(max_length=30)
+    # publication_type = models.CharField(max_length=30)
 
 
 class Publication(models.Model):
     author = models.ForeignKey(User)
     title = models.CharField(max_length=255)
-    creation_date = models.DateTimeField(default=timezone.now)
-    update_date = models.DateTimeField(default=timezone.now)
+    creation_date = models.DateTimeField(default=timezone.now, editable=False)
+    update_date = models.DateTimeField(default=timezone.now, editable=False)
     brief_description = models.CharField(max_length=300)
-    tags = GenericRelation(Tag)  # , related_name="%(class)s"
+    tags = GenericRelation(Taggable)  # , related_name="%(class)s"
     comments = GenericRelation(Comment)
     likes = GenericRelation(Like)
     meta_info = GenericRelation(PublicationMetaInfo)
@@ -68,7 +71,7 @@ class Publication(models.Model):
 
 class News(Publication):
     comments = GenericRelation(Comment, related_name="news_comments")
-    tags = GenericRelation(Tag, related_name="news_tags")
+    tags = GenericRelation(Taggable, related_name="news_tags")
     likes = GenericRelation(Like, related_name="news_likes")
     meta_info = GenericRelation(PublicationMetaInfo, related_name="news_meta_info")
 
@@ -80,7 +83,8 @@ class News(Publication):
              update_fields=None):
         if self.meta_info.count() == 0:
             super(News, self).save(force_insert, force_update, using, update_fields)
-            meta_info = PublicationMetaInfo(content_object=self, title=self.title, publication_type="news")
+            meta_info = PublicationMetaInfo(content_object=self, title=self.title)
+            # meta_info = PublicationMetaInfo(content_object=self, title=self.title, publication_type="news")
             meta_info.save()
         else:
             super(News, self).save(force_insert, force_update, using, update_fields)
@@ -92,7 +96,7 @@ class News(Publication):
 
 class Achievement(Publication):
     comments = GenericRelation(Comment, related_name="achievement_comments")
-    tags = GenericRelation(Tag, related_name="achievement_tags")
+    tags = GenericRelation(Taggable, related_name="achievement_tags")
     likes = GenericRelation(Like, related_name="achievement_likes")
     meta_info = GenericRelation(PublicationMetaInfo, related_name="achievement_meta_info")
 
@@ -104,7 +108,8 @@ class Achievement(Publication):
              update_fields=None):
         if self.meta_info.count() == 0:
             super(Achievement, self).save(force_insert, force_update, using, update_fields)
-            meta_info = PublicationMetaInfo(content_object=self, title=self.title, publication_type="achievement")
+            meta_info = PublicationMetaInfo(content_object=self, title=self.title)
+            # meta_info = PublicationMetaInfo(content_object=self, title=self.title, publication_type="achievement")
             meta_info.save()
         else:
             super(Achievement, self).save(force_insert, force_update, using, update_fields)

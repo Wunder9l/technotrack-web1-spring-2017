@@ -71,6 +71,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                # 'publications.context_processors.publication_overview'
             ],
         },
     },
@@ -88,7 +90,7 @@ DATABASES = {
         'USER': 'artem_mysql',
         'PASSWORD': 'web_server_passw',
         'HOST': 'localhost',
-        'DEFAULT_CHARSET': 'utf8',
+        # 'DEFAULT_CHARSET': 'utf8',
         'DEFAULT_CONTENT_TYPE': 'text/html',
     }
 }
