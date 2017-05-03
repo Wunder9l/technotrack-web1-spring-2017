@@ -1,0 +1,8 @@
+.sub-text {
+    color: gray;
+    font-style: italic;
+    font-family: Verdana, Arial, helvetica, sans-serif;
+    font-size: 12px;
+}
+
+.button-margin { margin:2px; }

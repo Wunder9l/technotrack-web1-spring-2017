@@ -23,30 +23,6 @@ from django.shortcuts import resolve_url
 #     return context
 
 
-class AchievementView(DetailView):
-    context_object_name = "publication"
-    model = Achievement
-    template_name = "publications/type/achievement/achievement_view.html"
-    pk_url_kwarg = "achievement_id"
-
-    def get_context_data(self, **kwargs):
-        comments = self.get_object().comments.all()
-        context = super(AchievementView, self).get_context_data(**kwargs)
-        context["comments"] = comments
-        return context
-
-
-class NewsView(DetailView):
-    context_object_name = "publication"
-    model = News
-    template_name = "publications/type/news/news_view.html"
-    pk_url_kwarg = "news_id"
-
-    def get_context_data(self, **kwargs):
-        comments = self.get_object().comments.all()
-        context = super(NewsView, self).get_context_data(**kwargs)
-        context["comments"] = comments
-        return context
 
 
 class PublicationsList(ListView):
@@ -67,8 +43,6 @@ class PublicationsList(ListView):
     def get_context_data(self, **kwargs):
         context = super(PublicationsList, self).get_context_data(**kwargs)
         context["sortform"] = self.sortform
-        context["achievement_content_type"] = ContentType.objects.get_for_model(Achievement)
-        context["news_content_type"] = ContentType.objects.get_for_model(News)
         return context
 
     def get_queryset(self):
@@ -92,7 +66,7 @@ class PublicationsList(ListView):
         return PublicationMetaInfo.objects.filter(content_type__in=chosen_content_types)
 
 
-class AchievementCreateView(CreateView):
+class CreateAchievementView(CreateView):
     model = Achievement
     form_class = AchievementForm
     # fields = ['title', 'content']
@@ -107,7 +81,37 @@ class AchievementCreateView(CreateView):
         form.instance.author = self.request.user
         print "FIELDS:", form.fields
         # form.instance.publication_type = form.fields
-        return super(AchievementCreateView, self).form_valid(form)
+        return super(CreateAchievementView, self).form_valid(form)
 
     def get_success_url(self):
         return resolve_url('publications:all')
+
+
+class EditAchievementView(UpdateView):
+    pass
+
+
+class AchievementView(DetailView):
+    context_object_name = "publication"
+    model = Achievement
+    template_name = "publications/type/achievement/achievement_view.html"
+    pk_url_kwarg = "achievement_id"
+
+    def get_context_data(self, **kwargs):
+        comments = self.get_object().comments.all()
+        context = super(AchievementView, self).get_context_data(**kwargs)
+        context["comments"] = comments
+        return context
+
+
+class NewsView(DetailView):
+    model = News
+    context_object_name = "publication"
+    template_name = "publications/type/news/news_view.html"
+    pk_url_kwarg = "news_id"
+
+    def get_context_data(self, **kwargs):
+        comments = self.get_object().comments.all()
+        context = super(NewsView, self).get_context_data(**kwargs)
+        context["comments"] = comments
+        return context

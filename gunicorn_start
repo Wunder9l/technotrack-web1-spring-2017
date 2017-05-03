@@ -1,0 +1,4 @@
+#!/bin/bash
+
+source ../env/bin/activate
+gunicorn -c ../conf/gunicorn.conf application.wsgi:application

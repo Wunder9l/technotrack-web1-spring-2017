@@ -11,20 +11,29 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
-
+from ConfigParser import RawConfigParser
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CONFIG_FILE_PATH = '/home/artem/technotrack/web/conf/project.conf'
+
+configs = RawConfigParser()
+configs.read(CONFIG_FILE_PATH)
+# print "CONFIGS:"
+# for section in configs.sections():
+#     print "  Section %s:" % section
+#     for item in configs.items(section):
+#         print "    %s: %s" % (item[0], item[1])
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'rpb3i$5p&m3-^+vv_6zp%)=dxqwn$@_4cou07gi71zek$ul#3y'
+SECRET_KEY = configs.get('global', 'SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'gunicorn.proxy']
 
 # Application definition
 
@@ -35,11 +44,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'widget_tweaks',
     'core.apps.CoreConfig',
     'publications.apps.PostsConfig',
     'comments.apps.CommentsConfig',
-    'widget_tweaks',
-    # 'comments'
 ]
 
 AUTH_USER_MODEL = 'core.User'
@@ -86,11 +94,11 @@ WSGI_APPLICATION = 'application.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'WebTechnotrack',
-        'USER': 'artem_mysql',
-        'PASSWORD': 'web_server_passw',
+        'NAME': configs.get('database', "NAME"),
+        'USER': configs.get('database', "USER"),
+        'PASSWORD': configs.get('database', "PASSWORD"),
         'HOST': 'localhost',
-        # 'DEFAULT_CHARSET': 'utf8',
+        'DEFAULT_CHARSET': 'utf8',
         'DEFAULT_CONTENT_TYPE': 'text/html',
     }
 }
@@ -131,3 +139,71 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = configs.get('global', 'STATIC_ROOT')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = configs.get('global', 'MEDIA_ROOT')
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'filters': {
+        # 'special': {
+        #     '()': 'project.logging.SpecialFilter',
+        #     'foo': 'bar',
+        # },
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        # 'mail_admins': {
+        #     'level': 'ERROR',
+        #     'class': 'django.utils.log.AdminEmailHandler',
+        #     # 'filters': ['special']
+        # },
+        'file_debug': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': configs.get('logs', 'debug_log_file'),
+            'filters': ['require_debug_true'],
+            'formatter': 'verbose'
+        },
+        'file_main': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': configs.get('logs', 'main_log_file'),
+            'formatter': 'verbose'
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file_main', 'file_debug'],
+            'propagate': True,
+            'level': "DEBUG"
+        },
+        # 'django.request': {
+        #     'handlers': ['mail_admins'],
+        #     'level': 'ERROR',
+        #     'propagate': False,
+        # },
+        # 'myproject.fileloggers': {
+        #     'handlers': ['file_debug', 'file_main'],
+        #     'level': "DEBUG",
+        #     'propagate': False
+        # }
+    }
+}

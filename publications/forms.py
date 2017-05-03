@@ -3,7 +3,7 @@ from django import forms
 from django.contrib.contenttypes.models import ContentType
 from django.core.validators import RegexValidator
 
-from publications.models import Achievement, Tag, Taggable
+from publications.models import Achievement, Tag, Taggable, News
 from .publication_type_resolver import AVAILABLE_PUBLICATIONS_TYPES
 
 tags_field_validator = RegexValidator(regex=ur'^[а-яa-z0-9,_]+$',
@@ -30,35 +30,45 @@ def set_tags_for_instance(instance, tags_string):
 
 class SortForm(forms.Form):
     sort = forms.ChoiceField(choices=(
-        ("creation_date", u"По дате создания"),
+        ("-creation_date", u"По дате создания"),
         ('title', u'По названию')
-    ), widget=forms.Select)
+    ), widget=forms.Select, label=u"Отсортировать")
     publication_type = forms.MultipleChoiceField(choices=AVAILABLE_PUBLICATIONS_TYPES,
                                                  label=u"Типы публикаций",
                                                  widget=forms.widgets.CheckboxSelectMultiple,
                                                  initial=[x[0] for x in AVAILABLE_PUBLICATIONS_TYPES],
                                                  required=False
                                                  )
-    search = forms.CharField(max_length=20, required=False)
+    search = forms.CharField(max_length=20, required=False, label=u"Поиск")
 
 
 class PublicationTemplateForm(forms.ModelForm):
     title = forms.CharField(max_length=150, label=u'Название')
-    brief_description = forms.CharField(required=False, label=u'Краткое описание', max_length=300)
     content = forms.CharField(widget=forms.Textarea, label=u'Содержание')
-    # image = forms.ImageField()
     tags = forms.CharField(max_length=150, required=False, label=u'Тэги', validators=[tags_field_validator])
 
-    # publication_type = forms.ChoiceField(choices=AVAILABLE_PUBLICATIONS_TYPES)
+
+class NewsForm(PublicationTemplateForm):
+    brief_description = forms.CharField(required=False, label=u'Краткое описание', max_length=300)
+
+    def save(self, commit=True):
+        instance = super(NewsForm, self).save(self)
+        tags = self.cleaned_data["tags"]
+        set_tags_for_instance(instance, tags)
+
+    class Meta:
+        model = News
+        fields = ["title", 'brief_description', "content"]
 
 
 class AchievementForm(PublicationTemplateForm):
+    image = forms.ImageField(label=u"Изображение")
+
     def save(self, commit=True):
         instance = super(AchievementForm, self).save(self)
-        # instance.author = get_user
         tags = self.cleaned_data["tags"]
         set_tags_for_instance(instance, tags)
 
     class Meta:
         model = Achievement
-        fields = ["title", 'brief_description', ]
+        fields = ["title", 'image']

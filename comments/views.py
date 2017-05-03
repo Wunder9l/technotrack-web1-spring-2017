@@ -1,12 +1,18 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import resolve_url
 from django.views.generic import DetailView, CreateView, UpdateView
+from django.views.generic import ListView
 
 from publications.publication_type_resolver import *
 
 
-class CommentView(DetailView):
-    queryset = Comment.objects.all()
+class CommentsListView(ListView):
+    model = Comment
+    paginate_by = 20
+
+    def get_queryset(self):
+        qs = Comment.objects.filter(good_list__pk=self.args[0])
+
 
 
 class EditCommentView(UpdateView):

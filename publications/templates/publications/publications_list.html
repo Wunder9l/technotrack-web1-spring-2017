@@ -11,17 +11,67 @@
             <h5><a href="{% url 'publications:achievement_new' %}">Добавить достижение</a></h5>
         {% endif %}
 
-        <form method="get" action="{% url 'publications:all' %}">
+        <form class="form-inline" method="get" action="{% url 'publications:all' %}">
             {{ sortform.errors }}
             {{ sortform.non_field_errors }}
-            {{ sortform.sort }}
+            {{ sortform.sort.label_tag }}{{ sortform.sort }}
             {{ sortform.publication_type }}
             {{ sortform.search.label_tag }}{{ sortform.search }}
-            <input type="submit" value="Применить">
+            <button type="submit" class="btn btn-primary">Применить</button>
         </form>
 
+{#        <form class="form-inline" method="get">#}
+{#            <div class="form-group">#}
+{#                <label for="email">Email address:</label>#}
+{#                <input type="email" class="form-control" id="email">#}
+{#            </div>#}
+{#            <div class="form-group">#}
+{#                <label for="pwd">Password:</label>#}
+{#                <input type="password" class="form-control" id="pwd">#}
+{#            </div>#}
+{#            <div class="checkbox">#}
+{#                <label><input type="checkbox"> Remember me</label>#}
+{#            </div>#}
+{#            <button type="submit" class="btn btn-default">Submit</button>#}
+{#        </form>#}
+
+{#        {% load widget_tweaks %}#}
+{#        <form class="form-inline" method="get" role="form">#}
+{#            {% for field in sortform %}#}
+{#                {% if field.errors %}#}
+{#                    <div class="form-group has-error">#}
+{#                        <label class="col-sm-2 control-label" for="id_{{ field.name }}">{{ field.label }}</label>#}
+{#                        <div class="col-sm-10">#}
+{#                            {{ field|attr:"class:form-control" }}#}
+{#                            <span class="help-block">#}
+{#                        {% for error in  field.errors %}{{ error }}{% endfor %}#}
+{#                    </span>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                {% else %}#}
+{#                    <div class="form-group">#}
+{#                        <label class="col-sm-2 control-label" for="id_{{ field.name }}">{{ field.label }}</label>#}
+{#                        <div class="col-sm-10" id="id_{{ field.name }}">#}
+{#                            {{ field|attr:"class:form-control" }}#}
+{#                            {% if field.help_text %}#}
+{#                                <p class="help-block">#}
+{#                                    <small>{{ field.help_text }}</small>#}
+{#                                </p>#}
+{#                            {% endif %}#}
+{#                        </div>#}
+{#                    </div>#}
+{#                {% endif %}#}
+{#            {% endfor %}#}
+{#            <div class="form-group">#}
+{#                <div class="col-sm-offset-2 col-sm-10">#}
+{#                    <button type="submit" class="btn btn-primary">Применить</button>#}
+{#                </div>#}
+{#            </div>#}
+{#        </form>#}
+
+
         {% for publication_meta_info in object_list %}
-            {% include "publications/tools/publication_view_href_gen.html" with object_meta_info=publication_meta_info achievement=achievement_content_type news=news_content_type %}
+            {% include "publications/tools/publication_view_href_gen.html" with object_meta_info=publication_meta_info %}
         {% endfor %}
     {% else %}
         <h1>Нет публикаций</h1>

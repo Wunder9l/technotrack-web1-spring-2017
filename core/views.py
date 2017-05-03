@@ -11,12 +11,10 @@ class MainPage(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(MainPage, self).get_context_data(**kwargs)
-        users_count = User.objects.all().count()
-        context["user_count"] = users_count
-        publication_count = PublicationMetaInfo.objects.count()
-        context["publication_count"] = publication_count
-        achievement_count = Achievement.objects.count()
-        context["achievement_count"] = publication_count
+        context["last_news"] = News.objects.last()  # sorted be order_by("-creation_date")
+        # if not context["last_news"]:
+        #     context["last_news"] = News()
+        context["last_achievement"] = Achievement.objects.last()  # sorted be order_by("-creation_date")
         return context
 
 

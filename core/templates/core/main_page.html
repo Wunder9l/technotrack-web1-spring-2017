@@ -1,17 +1,49 @@
 {% extends "core/base.html" %}
-
-{% block title %}Главная страница{% endblock %}
-
+{% load static %}
 {% block content %}
-    <div>Количество пользователей: {{ user_count }}</div>
-    {% if user_count %}<h2><a href="{% url 'core:all_users' %}">Все пользователи</a></h2>{% endif %}
-    <div>Всего публикаций: {{ publication_count }}</div>
+    {#    <div>Количество пользователей: {{ user_count }}</div>#}
+    {#    {% if user_count %}<h2><a href="{% url 'core:all_users' %}">Все пользователи</a></h2>{% endif %}#}
+    {#    <div>Всего публикаций: {{ publication_count }}</div>#}
+    {##}
+    {#    {% if publication_count %}<div>   Из них достижений: {{ achievement_count }}</div>#}
+    {#    <br>#}
+    {#    <div><a href="{% url 'publications:all' %}?sort=creation_date&publication_type=news&publication_type=achievement&search=">Перейти к списку</a></div>#}
+    {#    {% endif %}#}
 
-    {% if publication_count %}<div>   Из них достижений: {{ achievement_count }}</div>
-    <br>
-    <div><a href="{% url 'publications:all' %}?sort=creation_date&publication_type=news&publication_type=achievement&search=">Перейти к списку</a></div>
-    {% endif %}
-{% endblock %}
+    <!-- Jumbotron -->
+    <div class="jumbotron">
+        <h1>Название игры</h1>
+        <p class="lead">Краткое описание игры. Здесь должно быть не очень много буков!</p>
+        <p><a class="btn btn-lg btn-success" href="{% url "core:login" %}" role="button">Зарегестрироваться!</a></p>
+    </div>
 
-{% block footer_content %}
+    <!-- Example row of columns -->
+    <div class="row">
+        <div class="col-lg-6">
+            <h2>{{ last_news.title|default:"Последняя новость" }}</h2>
+            <p>{{ last_news.brief_description|default:"Краткая информаци о последней новости" }}</p>
+            <p><a class="btn btn-primary"
+                    {% if last_news %}
+                  href="{% url "publications:news_view" news_id=last_news.id %}"
+                    {% else %}
+                  disabled="true"
+                    {% endif %}
+                  role="button">Читать »</a></p>
+        </div>
+        <div class="col-lg-6">
+            <img alt="Achievement image"
+                 src="{% static 'core/images/main_page/default-achievement.jpg' %}"
+{#                 src="{{ last_achievement.image|default:"{% static 'core/images/main_page/default-achievement.jpg' %}" }}"#}
+                 class="img-responsive">
+            <h2>{{ last_achievement.title|default:"Последнее достижение" }}</h2>
+            <p><a class="btn btn-primary"
+                    {% if last_news %}
+                  href="{% url "publications:news_view" news_id=last_news.id %}"
+                    {% else %}
+                  disabled="true"
+                    {% endif %}
+                  role="button">Посмотреть »</a></p>
+        </div>
+    </div>
+
 {% endblock %}

@@ -1,0 +1,8 @@
+{% if comments %}
+    <h4>Комментарии:</h4>
+    {% for comment in comments %}
+        {% include "comment/one_comment.html" with comment=comment %}
+    {% endfor %}
+{% else %}
+    <h4>Нет комментариев</h4>
+{% endif %}

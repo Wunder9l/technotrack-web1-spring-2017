@@ -1,21 +1,30 @@
 {% if object_meta_info %}
     {% load publication_overview %}
 
-    <a href="{% publication_url publication_meta_info %}">{{ object_meta_info.title }}</a>
-    {#    {% if object_meta_info.content_type == achievement %}#}
-    {#        <h5>#}
-    {#            <a href="{% url 'publications:achievement_view' achievement_id=object_meta_info.content_object.id %}">{{ object_meta_info.title }}</a>#}
-    {#        </h5>#}
-    {#            {% if comment.author == user %}#}
-    {#                <div><a href="{% url 'comment:edit' comment_id=comment.id %}">Редактировать</a></div>#}
-    {#            {% endif %}#}
-    {#    {% elif  object_meta_info.content_type == news %}#}
-    {#        <h5>#}
-    {#            <a href="{% url 'publications:news_view' news_id=object_meta_info.content_object.id %}">{{ object_meta_info.title }}</a>#}
-    {#        </h5>#}
-    {#    {% endif %}#}
-    <div>Тип: {{ object_meta_info.content_type }}</div>
-    <div>
-        Автор: {{ object_meta_info.content_object.author.full_name }}, {{ object_meta_info.creation_date|date:'Y-m-d H:i' }}
+    <div class="col-lg-12 col-sm-12">
+        <h2><a href="{% publication_view_url object_meta_info %}">{{ object_meta_info.title }}</a></h2>
+        <p>Тип: {{ object_meta_info.content_type }}</p>
+        <p>
+            Автор: {{ object_meta_info.content_object.author.full_name }}, {{ object_meta_info.creation_date|date:'Y-m-d H:i' }}
+        </p>
+        <p>{{ object_meta_info.content_object.brief_description|default:"Краткое описание публикации" }}</p>
+{#        <p><a class="btn btn-default" href="{% publication_view_url object_meta_info %}"#}
+{#              role="button">Читать »</a></p>#}
     </div>
+    <div class="col-lg-4 col-sm-6">
+        <p><a class="btn btn-default" href="{% publication_view_url object_meta_info %}"
+              role="button">Читать »</a></p>
+    </div>
+    <div class="col-lg-4 col-sm-6">
+        {% if object_meta_info.content_object.author == user %}
+            <p><a class="btn btn-primary" href="{% publication_edit_url object_meta_info %}"
+                  role="button">Редактировать »</a></p>
+        {% endif %}
+    </div>
+
+    {#    <a href="{% publication_url publication_meta_info %} ">{{ object_meta_info.title }}</a>#}
+    {#    <div>Тип: {{ object_meta_info.content_type }}</div>#}
+    {#    <div>#}
+    {#        Автор: {{ object_meta_info.content_object.author.full_name }}, {{ object_meta_info.creation_date|date:'Y-m-d H:i' }}#}
+    {#    </div>#}
 {% endif %}

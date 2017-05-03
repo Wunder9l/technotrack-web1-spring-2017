@@ -1,0 +1,25 @@
+<div class="well well-sm">
+    {% if comment.reply_to %}
+        <p class="sub-text">Ответ на комментарий пользователя {{ comment.reply_to.username }} от
+            {{ comment.reply_to.creation_date|date:'Y-m-d H:i' }}
+        </p>
+    {% endif %}
+    <h4 class="media-heading text-primary reviews">{{ comment.author.username }}</h4>
+    <p class="media-comment">
+        {{ comment.content }}
+    </p>
+    <p class="sub-text">{{ comment.creation_date|date:'Y-m-d H:i' }}</p>
+
+    {% if user %}
+        <p class="text-right">
+            <a class="btn btn-default button-margin" href="#" id="reply"><span
+                    class="glyphicon glyphicon-share-alt"></span> Ответить</a>
+            {% if comment.author == user %}
+                <a class="btn btn-primary button-margin" href="#" id="reply">Редактировать</a>
+                {#            <div><a href="{% url 'comment:edit' comment_id=comment.id %}">Редактировать</a></div>#}
+            {% endif %}
+        </p>
+    {% endif %}
+
+
+</div>
