@@ -45,14 +45,26 @@ class Like(models.Model):
     REQUIRED_FIELDS = ['author']
 
 
+class PublicationMetaInfoQuerySet(models.QuerySet):
+    def get_published_only_or_all_for_owner(self, user):
+        if None is not user:
+            qs = self.filter(models.Q(author_id=user.id) | models.Q(is_published=True))
+        else:
+            qs = self.filter(is_published=True)
+        return qs
+
+
 class PublicationMetaInfo(models.Model):
+    is_published = models.BooleanField(default=True)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
-    author = models.ForeignKey(User, related_name="publications_meta_info")
+    author = models.ForeignKey(User, related_name="author_publications")
     content_object = GenericForeignKey('content_type', 'object_id')
     creation_date = models.DateTimeField(default=timezone.now, editable=False)
     update_date = models.DateTimeField(default=timezone.now, editable=False)
     title = models.CharField(max_length=255)
+
+    objects = PublicationMetaInfoQuerySet.as_manager()
 
     # publication_type = models.CharField(max_length=30)
     class Meta:
@@ -135,6 +147,7 @@ class Achievement(Publication):
 def apply_metainfo_to_publication(sender, **kwargs):
     print "SENDER:", sender
     print kwargs
+
 
 @receiver(post_save, sender=Achievement)
 def apply_metainfo_to_news(sender, **kwargs):

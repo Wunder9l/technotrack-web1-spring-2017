@@ -9,8 +9,8 @@ from application import settings
 
 
 class Comment(models.Model):
-    reply_to = models.ForeignKey('self')
-    author = models.ForeignKey(settings.AUTH_USER_MODEL)
+    reply_to = models.ForeignKey('self', null=True)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='author_comments')
     creation_date = models.DateTimeField(default=timezone.now)
     update_date = models.DateTimeField(default=timezone.now)
     content = models.TextField(verbose_name=u'Содержание')

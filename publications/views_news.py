@@ -19,7 +19,7 @@ class CreateNewsView(CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        print "FIELDS:", form.fields
+        # print "FIELDS:", form.fields
         # form.instance.publication_type = form.fields
         return super(CreateNewsView, self).form_valid(form)
 
@@ -40,3 +40,25 @@ class EditNewsView(UpdateView):
 
     def get_success_url(self):
         return resolve_url('publications:all')
+
+
+class EditNewsViewInline(UpdateView):
+    model = News
+    form_class = NewsForm
+    template_name = "publications/type/news/inline_news_form.html"
+    pk_url_kwarg = 'news_id'
+
+    def get_queryset(self):
+        qs = super(EditNewsViewInline, self).get_queryset()
+        qs = qs.filter(author=self.request.user)
+        return qs
+
+    def form_valid(self, form):
+        # Тут возможно заполнение чего-то типа автора итп
+        # form.instance.author = self.request.user
+        resp = super(EditNewsViewInline, self).form_valid(form)
+        return "OK"
+
+    def form_invalid(self, form):
+        resp = super(EditNewsViewInline, self).form_invalid(form)
+        return resp

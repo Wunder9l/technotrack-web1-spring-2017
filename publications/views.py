@@ -1,11 +1,13 @@
 # coding: utf-8
 from django.contrib.contenttypes.models import ContentType
+from django.db import models
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 
 from publications.publication_type_resolver import PUBLICATION_TYPE_TO_MODEL, PUBLICATION_TYPE_TO_CONTENT_TYPE
 from .forms import *
 from .models import Publication, Achievement, News, PublicationMetaInfo
 from comments.models import Comment
+from core.instruments import get_cached_or_qs
 from django.shortcuts import resolve_url
 
 
@@ -42,6 +44,10 @@ class PublicationsList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(PublicationsList, self).get_context_data(**kwargs)
+        context['total_comments_of_user'] = get_cached_or_qs(
+            "total_comments_of_user_{}".format(self.request.user.id),
+            Comment.objects.filter(author_id=self.request.user.id).count,
+            5)
         context["sortform"] = self.sortform
         return context
 
@@ -49,16 +55,22 @@ class PublicationsList(ListView):
         # query_set = super(PublicationsList,self).get_queryset()
         if self.sortform.is_valid():
             print "IN GET_QUERYSET, FORM IS VALID"
-            initial_queryset = self.get_initial_queryset()
+            qs = self.get_initial_queryset()
+            qs = qs.select_related("author").get_published_only_or_all_for_owner(self.request.user)
+            qs = qs.prefetch_related("content_object")
+            # qs = qs.annotate(comments_count=models.Count('content_object__comments'))
+            qs = qs.annotate(
+                author_activity=models.Count('author__author_publications') + models.Count('author__author_comments'))
+
             if self.sortform.cleaned_data['search']:
-                qs = initial_queryset.filter(title__icontains=self.sortform.cleaned_data['search']).order_by(
+                qs = qs.filter(title__icontains=self.sortform.cleaned_data['search']).order_by(
                     self.sortform.cleaned_data['sort'])[:self.paginate_by]
             else:
-                qs = initial_queryset.order_by(self.sortform.cleaned_data['sort'])[:self.paginate_by]
+                qs = qs.order_by(self.sortform.cleaned_data['sort'])[:self.paginate_by]
             return qs
         else:
             print "IN GET_QUERYSET, FORM INVALID", type(self.sortform.errors), len(self.sortform.errors)
-            return super(PublicationsList, self).get_queryset()
+            return super(PublicationsList, self).get_queryset().get_published_only_or_all_for_owner(self.request.user)
 
     def get_initial_queryset(self):
         types = self.sortform.cleaned_data["publication_type"]

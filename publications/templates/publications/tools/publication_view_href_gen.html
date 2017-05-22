@@ -1,3 +1,4 @@
+{% load cache %}
 {% if object_meta_info %}
     {% load publication_overview %}
 
@@ -5,18 +6,24 @@
         <h2><a href="{% publication_view_url object_meta_info %}">{{ object_meta_info.title }}</a></h2>
         <p>Тип: {{ object_meta_info.content_type }}</p>
         <p>
-            Автор: {{ object_meta_info.content_object.author.full_name }}, {{ object_meta_info.creation_date|date:'Y-m-d H:i' }}
+            Автор: {{ object_meta_info.author.full_name }}, {{ object_meta_info.creation_date|date:'Y-m-d H:i' }}
         </p>
         <p>{{ object_meta_info.content_object.brief_description|default:"Краткое описание публикации" }}</p>
-{#        <p><a class="btn btn-default" href="{% publication_view_url object_meta_info %}"#}
-{#              role="button">Читать »</a></p>#}
+        {#        <p><a class="btn btn-default" href="{% publication_view_url object_meta_info %}"#}
+        {#              role="button">Читать »</a></p>#}
+        <p>
+            Активность автора:
+            {% cache 5 'authoractivity' object_meta_info.author_id %}{{ object_meta_info.author_activity }}{% endcache %}
+{#            Комментариев:#}
+{#            {% cache 5 'commentscount' object_meta_info.id %}{{ object_meta_info.comments_count }}{% endcache %}#}
+        </p>
     </div>
     <div class="col-lg-4 col-sm-6">
         <p><a class="btn btn-default" href="{% publication_view_url object_meta_info %}"
               role="button">Читать »</a></p>
     </div>
     <div class="col-lg-4 col-sm-6">
-        {% if object_meta_info.content_object.author == user %}
+        {% if object_meta_info.author == user %}
             <p><a class="btn btn-primary" href="{% publication_edit_url object_meta_info %}"
                   role="button">Редактировать »</a></p>
         {% endif %}

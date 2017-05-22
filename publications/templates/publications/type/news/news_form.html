@@ -1,6 +1,8 @@
 {% load widget_tweaks %}
 
-<form class="form-horizontal" role="form" method="post">
+<form class="form-horizontal" {% comment %} ajaxnewsform"{% endcomment %}
+{#      data-url="{% url 'publications:news_edit' news_id=object_id %}"#}
+      role="form" method="post">
     {% csrf_token %}
     {% for field in form %}
         {% if field.errors %}

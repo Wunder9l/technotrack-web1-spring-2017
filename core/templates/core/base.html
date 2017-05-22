@@ -6,9 +6,9 @@
     <meta charset="UTF-8">
     <title>{% block head_title %}My first django site{% endblock %}</title>
     {% include "core/base_css_links.html" %}
-    {% block head_extra %}{% endblock %}
     {% include "core/base_js.html" %}
     {#    <script src="{% static "core/bootstrap/dist/js/bootstrap.min.js" %}"></script>#}
+    {% block head_extra %}{% endblock %}
 </head>
 <body>
 <div class="container">

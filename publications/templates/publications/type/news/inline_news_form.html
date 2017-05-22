@@ -1,0 +1,10 @@
+{% extends "core/base.html" %}
+{% load crispy_forms_filters %}
+
+{% block content %}
+    <form method="post" class="ajaxnewsform" data-url="{% url 'publications:news_edit' news_id=object.id %}">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-default">Сохранить</button>
+    </form>
+{% endblock %}

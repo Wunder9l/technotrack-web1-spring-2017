@@ -9,16 +9,16 @@
     <h4>Опубликовано: {{ publication.creation_date|date:'Y-m-d H:i' }}</h4>
 
     {% block publication_content %}
-{#        <div>#}
-{#            {{ publication.content }}#}
-{#        </div>#}
+        {#        <div>#}
+        {#            {{ publication.content }}#}
+        {#        </div>#}
     {% endblock %}
 
     {% if user.username %}
         <h5>{% block add_comment %}{% endblock %}</h5>
     {% endif %}
 
-    <div class="row comments_list_autoupdate" date-url="{% url '' %}"/>
-
+    {% block comments_list %}
+    {% endblock %}
 
 {% endblock %}

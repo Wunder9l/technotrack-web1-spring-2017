@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 from ConfigParser import RawConfigParser
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CONFIG_FILE_PATH = '/home/artem/technotrack/web/conf/project.conf'
@@ -34,6 +35,7 @@ SECRET_KEY = configs.get('global', 'SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'gunicorn.proxy']
+INTERNAL_IPS = ['127.0.0.1', ]
 
 # Application definition
 
@@ -48,7 +50,11 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'publications.apps.PostsConfig',
     'comments.apps.CommentsConfig',
+    'debug_toolbar',
+    'crispy_forms',
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 AUTH_USER_MODEL = 'core.User'
 
@@ -57,6 +63,7 @@ LOGIN_REDIRECT_URL = 'core:main_page'
 LOGOUT_REDIRECT_URL = 'core:main_page'
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -65,6 +72,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+}
 
 ROOT_URLCONF = 'application.urls'
 

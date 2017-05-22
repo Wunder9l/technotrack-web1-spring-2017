@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
 
-from publications.views_news import CreateNewsView, EditNewsView
+from publications.views_news import CreateNewsView, EditNewsView, EditNewsViewInline
 from .views import AchievementView, PublicationsList, CreateAchievementView, EditAchievementView, NewsView
 
 urlpatterns = [
@@ -15,5 +15,6 @@ urlpatterns = [
     url(r'^news/(?P<news_id>\d+)/$', NewsView.as_view(), name="news_view"),
     url(r'^news/create/$', login_required(CreateNewsView.as_view()), name="news_create"),
     url(r'^news/edit/(?P<news_id>\d+)$', login_required(EditNewsView.as_view()), name="news_edit"),
+    url(r'^news/editinline/(?P<news_id>\d+)$', login_required(EditNewsViewInline.as_view()), name="news_edit_inline"),
     # url(r'^all/$', PublicationsList.as_view(), name="user_publications"),
 ]

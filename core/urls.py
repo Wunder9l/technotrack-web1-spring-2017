@@ -1,6 +1,6 @@
-from django.conf.urls import url
 from django.contrib.auth.views import login, logout
 from core.views import UserView, UsersList, MainPage, UserRegistrationView
+from django.conf.urls import include, url
 
 urlpatterns = [
     url(r'^$', MainPage.as_view(), name="main_page"),

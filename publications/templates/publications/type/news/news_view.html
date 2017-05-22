@@ -3,7 +3,8 @@
 {% block publication_type %}новость{% endblock %}
 
 {% block publication_content %}
-    {{ publication.brief_description }}
+    <p>{{ publication.brief_description }}</p>
+{#    <p>{{ publication. }}</p>#}
 {% endblock %}
 
 {% block add_comment %}
@@ -12,4 +13,8 @@
     <a class="btn btn-primary" href="{% url 'comment:create' publication_type='news' publication_id=publication.id %}">
         Добавить комментарий
     </a></p>
+
+    {% block comments_list %}
+        <div class="row autoupdatable" data-url="{% url 'comment:news_comments' news_id=publication.id %}"/>
+    {% endblock %}
 {% endblock %}
